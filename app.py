@@ -32,7 +32,7 @@ with st.sidebar:
 
     c1, c2 = st.columns([1, 3])
     c1.markdown(f'<div class="icon">{ui.MOON if S.dark else ui.SUN}</div>', unsafe_allow_html=True)
-    S.dark = c2.toggle("Dark theme", value=S.dark)
+    c2.toggle("Dark theme", key="dark")
 
     st.divider()
     with st.expander("⚙️ Model", expanded=True):
