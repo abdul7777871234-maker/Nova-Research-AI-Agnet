@@ -215,63 +215,54 @@ body,
 
 
 /* =========================================================
-   SELECTBOX
+   SELECTBOX - FIX WHITE DROPDOWN ARROW CONTAINER
    ========================================================= */
 
-[data-testid="stSelectbox"] {{
+/* Main outer selectbox wrapper */
+[data-testid="stSelectbox"] {
     background: transparent !important;
     color: {p['text']} !important;
-}}
+}
 
-[data-testid="stSelectbox"] [data-baseweb="select"] {{
-    background: transparent !important;
-    color: {p['text']} !important;
-    border: none !important;
-}}
-
+/* BaseWeb input container & outer shell */
+[data-testid="stSelectbox"] [data-baseweb="select"],
 [data-testid="stSelectbox"] [data-baseweb="select"] > div,
-[data-testid="stSelectbox"] [data-baseweb="select"] > div > div,
-[data-testid="stSelectbox"] [data-baseweb="select"] > div > div > div,
-[data-testid="stSelectbox"] [role="combobox"],
-[data-testid="stSelectbox"] [role="combobox"] > div {{
+[data-testid="stSelectbox"] [data-baseweb="select"] * {
     background-color: {p['panel']} !important;
-    background-image: none !important;
     color: {p['text']} !important;
     border-color: {p['border']} !important;
-    border-radius: 10px !important;
-}}
-
-[data-testid="stSelectbox"] [data-baseweb="select"] *,
-[data-testid="stSelectbox"] [role="combobox"] * {{
-    color: {p['text']} !important;
     -webkit-text-fill-color: {p['text']} !important;
-}}
+}
 
-[data-testid="stSelectbox"] input {{
+/* BaseWeb right-side arrow container wrapper */
+[data-testid="stSelectbox"] [data-baseweb="select"] [role="button"],
+[data-testid="stSelectbox"] [data-baseweb="select"] [data-testid="stSelectboxHeader"] {
     background-color: {p['panel']} !important;
-    background-image: none !important;
+}
+
+/* Selectbox inputs */
+[data-testid="stSelectbox"] input {
+    background-color: {p['panel']} !important;
     color: {p['text']} !important;
-    -webkit-text-fill-color: {p['text']} !important;
     caret-color: {p['text']} !important;
-}}
+}
 
-[data-testid="stSelectbox"] [data-baseweb="select"] svg {{
-    color: {p['text']} !important;
+/* Dropdown arrow icon color */
+[data-testid="stSelectbox"] [data-baseweb="select"] svg {
     fill: {p['text']} !important;
+    color: {p['text']} !important;
     stroke: {p['text']} !important;
-}}
+}
 
-[data-testid="stSelectbox"] [data-baseweb="select"]:hover > div {{
-    background-color: {p['panel']} !important;
+/* Hover and Focus States */
+[data-testid="stSelectbox"] [data-baseweb="select"]:hover > div {
     border-color: #6C5CE7 !important;
-}}
+}
 
-[data-testid="stSelectbox"] [data-baseweb="select"]:focus-within > div {{
-    background-color: {p['panel']} !important;
+[data-testid="stSelectbox"] [data-baseweb="select"]:focus-within > div {
     border-color: #6C5CE7 !important;
     box-shadow: 0 0 0 1px #6C5CE7 !important;
-}}
-
+}
 
 /* =========================================================
    DROPDOWN / POPOVER
