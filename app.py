@@ -30,7 +30,7 @@ with st.sidebar:
     st.markdown(f'<div class="brand">{ui.logo(40)}<b>Nova Research</b></div>', unsafe_allow_html=True)
     st.markdown('<p class="muted">Web research agent · CrewAI</p>', unsafe_allow_html=True)
 
-    c1, c2 = st.columns([1, 3])
+    c1, c2 = st.columns([1, 5], vertical_alignment="center")
     c1.markdown(f'<div class="icon">{ui.MOON if S.dark else ui.SUN}</div>', unsafe_allow_html=True)
     c2.toggle("Dark theme", key="dark")
 
