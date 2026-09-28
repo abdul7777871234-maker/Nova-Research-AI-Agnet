@@ -1,10 +1,11 @@
-"""Single CrewAI research agent: DuckDuckGo search + Groq / Gemini LLM."""
+"""Single CrewAI research agent: DuckDuckGo search + Groq / Gemini (with fallback)."""
 import os
 import streamlit as st
 
 os.environ.setdefault("CREWAI_DISABLE_TELEMETRY", "true")
 os.environ.setdefault("OTEL_SDK_DISABLED", "true")
 
+import litellm
 from crewai import Agent, Crew, LLM, Process, Task
 from crewai.tools import tool
 from ddgs import DDGS
@@ -14,6 +15,31 @@ PROVIDERS = {
     "Google · Gemini Flash": "gemini",
 }
 
+DEFAULT_GEMINI = ("gemini-3.8-flash,gemini-3.7-flash,gemini-3.6-flash,gemini-3.5-flash,"
+                  "gemini-3.2-flash,gemini-3.1-flash,gemini-3-flash")
+
+
+# ---- Patch: CrewAI adds an internal "cache_breakpoint" key that Groq rejects ----
+def _strip(messages):
+    if isinstance(messages, list):
+        return [{k: v for k, v in m.items() if k != "cache_breakpoint"} if isinstance(m, dict) else m
+                for m in messages]
+    return messages
+
+
+def _wrap(fn):
+    def inner(*args, **kwargs):
+        if "messages" in kwargs:
+            kwargs["messages"] = _strip(kwargs["messages"])
+        kwargs.pop("is_litellm", None)
+        return fn(*args, **kwargs)
+    inner._patched = True
+    return inner
+
+
+if not getattr(litellm.completion, "_patched", False):
+    litellm.completion = _wrap(litellm.completion)
+
 
 def _secret(name: str, default: str = "") -> str:
     try:
@@ -22,7 +48,7 @@ def _secret(name: str, default: str = "") -> str:
         return os.environ.get(name, default)
 
 
-def build_llm(provider: str) -> LLM:
+def build_llm(provider: str, model: str | None = None) -> LLM:
     if provider == "groq":
         key = _secret("GROQ_API_KEY")
         if not key:
@@ -31,11 +57,11 @@ def build_llm(provider: str) -> LLM:
     key = _secret("GEMINI_API_KEY")
     if not key:
         raise RuntimeError("GEMINI_API_KEY missing in Streamlit secrets.")
-    return LLM(model=f"gemini/{_secret('GEMINI_MODEL', 'gemini-3.8-flash')}", api_key=key, temperature=0.2)
+    return LLM(model=f"gemini/{model}", api_key=key, temperature=0.2)
 
 
 def _make_search_tool(max_results: int, region: str, timelimit: str | None):
-    seen: dict[str, str] = {}  # per-run memo: identical searches cost nothing
+    seen: dict[str, str] = {}
 
     @tool("duckduckgo_search")
     def duckduckgo_search(query: str) -> str:
@@ -45,7 +71,7 @@ def _make_search_tool(max_results: int, region: str, timelimit: str | None):
             return "(Already searched this query; reuse earlier results.)\n" + seen[k]
         try:
             hits = DDGS().text(query, region=region, timelimit=timelimit, max_results=max_results)
-        except Exception as e:  # rate limits etc.
+        except Exception as e:
             return f"Search failed: {e}"
         out = "\n\n".join(f"[{i}] {h['title']}\n{h['href']}\n{h['body']}" for i, h in enumerate(hits, 1)) or "No results."
         seen[k] = out
@@ -54,15 +80,13 @@ def _make_search_tool(max_results: int, region: str, timelimit: str | None):
     return duckduckgo_search
 
 
-def research(query: str, provider: str, depth: int, style: str, region: str, timelimit: str | None) -> str:
-    llm = build_llm(provider)
+def _run(llm, query, depth, style, region, timelimit) -> str:
     search = _make_search_tool(max_results=depth + 2, region=region, timelimit=timelimit)
     agent = Agent(
         role="Senior Research Analyst",
         goal="Research topics thoroughly using web search and deliver accurate, well-sourced answers.",
         backstory="You verify claims across sources, avoid redundant searches, and always cite URLs.",
-        tools=[search], llm=llm, allow_delegation=False, verbose=False,
-        max_iter=depth + 2,
+        tools=[search], llm=llm, allow_delegation=False, verbose=False, max_iter=depth + 2,
     )
     task = Task(
         description=(f"Research: {query}\nUse at most {depth} distinct searches; never repeat a query. "
@@ -72,3 +96,33 @@ def research(query: str, provider: str, depth: int, style: str, region: str, tim
     )
     result = Crew(agents=[agent], tasks=[task], process=Process.sequential, verbose=False).kickoff()
     return str(result.raw if hasattr(result, "raw") else result)
+
+
+def _should_fallback(err: Exception) -> bool:
+    s = str(err).lower()
+    return any(w in s for w in ("503", "unavailable", "overloaded", "high demand", "429", "rate limit",
+                                "quota", "resource_exhausted", "404", "not found", "not_found",
+                                "500", "internal", "timeout", "timed out"))
+
+
+def research(query: str, provider: str, depth: int, style: str, region: str, timelimit: str | None) -> str:
+    if provider == "gemini":
+        models = [m.strip() for m in _secret("GEMINI_MODELS", DEFAULT_GEMINI).split(",") if m.strip()]
+        chain = [("gemini", m) for m in models] + [("groq", None)]
+    else:
+        chain = [("groq", None)]
+
+    last: Exception | None = None
+    for prov, model in chain:
+        try:
+            llm = build_llm(prov, model)
+            answer = _run(llm, query, depth, style, region, timelimit)
+            label = model or _secret("GROQ_MODEL", "openai/gpt-oss-120b")
+            return f"{answer}\n\n<sub>Answered by `{label}`</sub>"
+        except RuntimeError as e:      # missing key: skip to next option
+            last = e
+        except Exception as e:
+            last = e
+            if not _should_fallback(e):
+                raise                  # e.g. wrong API key: show it right away
+    raise last if last else RuntimeError("No model available.")
