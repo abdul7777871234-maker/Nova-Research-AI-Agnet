@@ -23,19 +23,43 @@ def logo(size=40) -> str:
 def inject_css(mode: str):
     p = PALETTES[mode]
     st.markdown(f"""<style>
-    .stApp {{ background:{p['bg']}; color:{p['text']}; }}
-    [data-testid="stSidebar"] {{ background:{p['panel']}; border-right:1px solid {p['border']}; }}
-    [data-testid="stHeader"] {{ background:transparent; }}
-    .stApp, .stApp p, .stApp label, .stApp span, .stApp li, .stApp h1, .stApp h2, .stApp h3 {{ color:{p['text']}; }}
+    .stApp, [data-testid="stAppViewContainer"], [data-testid="stMain"] {{ background:{p['bg']} !important; }}
+    [data-testid="stSidebar"], [data-testid="stSidebar"] > div {{ background:{p['panel']} !important; border-right:1px solid {p['border']}; }}
+    [data-testid="stHeader"] {{ background:transparent !important; }}
+    [data-testid="stBottom"], [data-testid="stBottom"] > div,
+    [data-testid="stBottomBlockContainer"] {{ background:{p['bg']} !important; }}
+    .stApp, .stApp p, .stApp label, .stApp span, .stApp li,
+    .stApp h1, .stApp h2, .stApp h3, .stApp div[data-testid="stMarkdownContainer"] {{ color:{p['text']}; }}
     .muted {{ color:{p['muted']} !important; font-size:.9rem; }}
+    .icon {{ color:{p['text']} !important; display:flex; padding-top:6px; }}
     .brand {{ display:flex; align-items:center; gap:12px; }}
     .brand b {{ font-size:1.25rem; background:linear-gradient(90deg,#6C5CE7,#00CEC9); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }}
-    [data-testid="stChatMessage"] {{ background:{p['panel']}; border:1px solid {p['border']}; border-radius:16px; padding:.9rem 1rem; }}
-    [data-testid="stChatInput"] textarea {{ color:{p['text']}; }}
-    [data-testid="stChatInput"] > div {{ background:{p['panel']}; border:1px solid {p['border']}; border-radius:14px; }}
-    div[data-baseweb="select"] > div {{ background:{p['panel']}; border-color:{p['border']}; border-radius:10px; }}
+
+    [data-testid="stExpander"] {{ background:{p['panel']} !important; border:1px solid {p['border']} !important; border-radius:12px; }}
+    [data-testid="stExpander"] summary, [data-testid="stExpander"] details {{ background:transparent !important; }}
+    [data-testid="stExpander"] summary p, [data-testid="stExpander"] summary span,
+    [data-testid="stExpander"] summary svg {{ color:{p['text']} !important; fill:{p['text']} !important; }}
+
+    div[data-baseweb="select"] > div {{ background:{p['bg']} !important; border:1px solid {p['border']} !important; border-radius:10px; }}
+    div[data-baseweb="select"] * {{ color:{p['text']} !important; }}
+    div[data-baseweb="select"] svg {{ fill:{p['text']} !important; }}
+    div[data-baseweb="popover"], div[data-baseweb="popover"] ul, ul[role="listbox"] {{ background:{p['panel']} !important; }}
+    li[role="option"] {{ background:{p['panel']} !important; color:{p['text']} !important; }}
+    li[role="option"]:hover {{ background:#6C5CE722 !important; }}
+
+    [data-testid="stToggle"] label, [data-testid="stToggle"] p {{ color:{p['text']} !important; }}
+
+    [data-testid="stChatMessage"] {{ background:{p['panel']} !important; border:1px solid {p['border']}; border-radius:16px; padding:.9rem 1rem; }}
+    [data-testid="stChatInput"], [data-testid="stChatInput"] > div {{ background:{p['panel']} !important; border:1px solid {p['border']}; border-radius:14px; }}
+    [data-testid="stChatInput"] textarea {{ color:{p['text']} !important; -webkit-text-fill-color:{p['text']} !important; background:transparent !important; }}
+    [data-testid="stChatInput"] textarea::placeholder {{ color:{p['muted']} !important; -webkit-text-fill-color:{p['muted']} !important; }}
+    [data-testid="stChatInput"] button {{ background:#6C5CE7 !important; }}
+    [data-testid="stChatInput"] button svg {{ fill:#fff !important; color:#fff !important; }}
+
     .stButton > button, .stDownloadButton > button {{ border-radius:10px; border:1px solid {p['border']}; background:{p['panel']}; color:{p['text']}; }}
     .stButton > button:hover, .stDownloadButton > button:hover {{ border-color:#6C5CE7; color:#6C5CE7; }}
     .stButton > button[kind="primary"] {{ background:linear-gradient(90deg,#6C5CE7,#8E7DFF); color:#fff; border:none; }}
+    .stButton > button[kind="primary"] p {{ color:#fff !important; }}
+    [data-testid="stAlert"] {{ background:{p['panel']} !important; border:1px solid {p['border']}; }}
     .tag {{ display:inline-block; padding:2px 10px; border-radius:99px; font-size:.75rem; background:#6C5CE722; color:#6C5CE7 !important; }}
     </style>""", unsafe_allow_html=True)
