@@ -61,14 +61,15 @@ def inject_css(mode: str):
     .stButton > button[kind="primary"] {{ background:linear-gradient(90deg,#6C5CE7,#8E7DFF); color:#fff; border:none; }}
     .stButton > button[kind="primary"] p {{ color:#fff !important; }}
     [data-testid="stAlert"] {{ background:{p['panel']} !important; border:1px solid {p['border']}; }}
-    .tag {{ display:inline-block; padding:2px 10px; border-radius:99px; font-size:.75rem; background:#6C5CE722; color:#6C5CE7 !important; 
-        /* dropdown + sidebar fixes */
-    [data-baseweb="select"] div, [data-baseweb="select"] span, [data-baseweb="select"] input {{ background-color:transparent !important; color:{p['text']} !important; -webkit-text-fill-color:{p['text']} !important; }}
-    [data-baseweb="select"] > div {{ background:{p['bg']} !important; }}
-    [data-testid="stSidebar"] [data-baseweb="select"] > div {{ background:{p['bg']} !important; border:1px solid {p['border']} !important; }}
-    [data-baseweb="popover"] > div, [data-baseweb="menu"] {{ background:{p['panel']} !important; border:1px solid {p['border']}; border-radius:10px; }}
-    [data-baseweb="menu"] li, [data-baseweb="menu"] li * {{ background:transparent !important; color:{p['text']} !important; }}
-    [data-baseweb="menu"] li:hover {{ background:#6C5CE733 !important; }}
-    [data-testid="stSidebar"] [data-testid="stVerticalBlock"] {{ gap:.7rem; }}
+    .tag {{ display:inline-block; padding:2px 10px; border-radius:99px; font-size:.75rem; background:#6C5CE722; color:#6C5CE7 !important;
+        /* dropdown override */
+    .stApp [data-testid="stSelectbox"] [data-baseweb="select"] > div,
+    .stApp [data-testid="stSelectbox"] [data-baseweb="select"] > div > div,
+    .stApp [data-testid="stSelectbox"] div[role="combobox"] {{ background:{p['bg']} !important; background-color:{p['bg']} !important; border-color:{p['border']} !important; }}
+    .stApp [data-testid="stSelectbox"] [data-baseweb="select"] * {{ color:{p['text']} !important; -webkit-text-fill-color:{p['text']} !important; }}
+    .stApp [data-testid="stSelectbox"] svg {{ fill:{p['text']} !important; }}
+    div[data-baseweb="popover"] div[data-baseweb="menu"], div[data-baseweb="popover"] ul {{ background:{p['panel']} !important; }}
+    div[data-baseweb="popover"] li, div[data-baseweb="popover"] li * {{ background:transparent !important; color:{p['text']} !important; -webkit-text-fill-color:{p['text']} !important; }}
+    div[data-baseweb="popover"] li:hover {{ background:#6C5CE733 !important; }}
     .icon {{ justify-content:center; }}
     </style>""", unsafe_allow_html=True)
