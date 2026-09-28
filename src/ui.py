@@ -219,50 +219,51 @@ body,
    ========================================================= */
 
 /* Main outer selectbox wrapper */
-[data-testid="stSelectbox"] {
+[data-testid="stSelectbox"] {{
     background: transparent !important;
     color: {p['text']} !important;
-}
+}}
 
 /* BaseWeb input container & outer shell */
 [data-testid="stSelectbox"] [data-baseweb="select"],
 [data-testid="stSelectbox"] [data-baseweb="select"] > div,
-[data-testid="stSelectbox"] [data-baseweb="select"] * {
+[data-testid="stSelectbox"] [data-baseweb="select"] * {{
     background-color: {p['panel']} !important;
     color: {p['text']} !important;
     border-color: {p['border']} !important;
     -webkit-text-fill-color: {p['text']} !important;
-}
+}}
 
 /* BaseWeb right-side arrow container wrapper */
 [data-testid="stSelectbox"] [data-baseweb="select"] [role="button"],
-[data-testid="stSelectbox"] [data-baseweb="select"] [data-testid="stSelectboxHeader"] {
+[data-testid="stSelectbox"] [data-baseweb="select"] [data-testid="stSelectboxHeader"] {{
     background-color: {p['panel']} !important;
-}
+}}
 
 /* Selectbox inputs */
-[data-testid="stSelectbox"] input {
+[data-testid="stSelectbox"] input {{
     background-color: {p['panel']} !important;
     color: {p['text']} !important;
     caret-color: {p['text']} !important;
-}
+}}
 
 /* Dropdown arrow icon color */
-[data-testid="stSelectbox"] [data-baseweb="select"] svg {
+[data-testid="stSelectbox"] [data-baseweb="select"] svg {{
     fill: {p['text']} !important;
     color: {p['text']} !important;
     stroke: {p['text']} !important;
-}
+}}
 
 /* Hover and Focus States */
-[data-testid="stSelectbox"] [data-baseweb="select"]:hover > div {
+[data-testid="stSelectbox"] [data-baseweb="select"]:hover > div {{
     border-color: #6C5CE7 !important;
-}
+}}
 
-[data-testid="stSelectbox"] [data-baseweb="select"]:focus-within > div {
+[data-testid="stSelectbox"] [data-baseweb="select"]:focus-within > div {{
     border-color: #6C5CE7 !important;
     box-shadow: 0 0 0 1px #6C5CE7 !important;
-}
+}}
+
 
 /* =========================================================
    DROPDOWN / POPOVER
