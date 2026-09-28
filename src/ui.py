@@ -34,18 +34,57 @@ def inject_css(mode: str):
 [data-testid="stExpander"] summary, [data-testid="stExpander"] details {{ background:transparent !important; }}
 [data-testid="stExpander"] summary p, [data-testid="stExpander"] summary span, [data-testid="stExpander"] summary svg {{ color:{p['text']} !important; fill:{p['text']} !important; }}
 
-.stApp [data-testid="stSelectbox"] {{ background:transparent !important; }}
-.stApp [data-testid="stSelectbox"] [data-baseweb="select"],
-.stApp [data-testid="stSelectbox"] [data-baseweb="select"] > div,
-.stApp [data-testid="stSelectbox"] [data-baseweb="select"] *,
-.stApp [data-testid="stSelectbox"] [data-baseweb="select"] [role="button"],
-.stApp [data-testid="stSelectbox"] [data-baseweb="select"] [data-testid="stSelectboxHeader"] {{ background:{p['panel']} !important; background-color:{p['panel']} !important; border-color:{p['border']} !important; color:{p['text']} !important; -webkit-text-fill-color:{p['text']} !important; border-radius:10px; }}
-.stApp [data-testid="stSelectbox"] input {{ background:{p['panel']} !important; color:{p['text']} !important; caret-color:{p['text']} !important; }}
-.stApp [data-testid="stSelectbox"] svg {{ fill:{p['text']} !important; color:{p['text']} !important; stroke:{p['text']} !important; }}
+/* SELECTBOX - OUTER BOX & ARROW CONTAINER */
+[data-testid="stSelectbox"] [data-baseweb="select"],
+[data-testid="stSelectbox"] [data-baseweb="select"] > div,
+[data-testid="stSelectbox"] [data-baseweb="select"] [role="button"],
+[data-testid="stSelectbox"] [data-baseweb="select"] [data-testid="stSelectboxHeader"] {{
+    background-color: {p['panel']} !important;
+    background: {p['panel']} !important;
+    border-color: {p['border']} !important;
+    color: {p['text']} !important;
+    border-radius: 10px !important;
+}}
 
-div[data-baseweb="popover"] div[data-baseweb="menu"], div[data-baseweb="popover"] ul {{ background:{p['panel']} !important; }}
-div[data-baseweb="popover"] li, div[data-baseweb="popover"] li * {{ background:transparent !important; color:{p['text']} !important; -webkit-text-fill-color:{p['text']} !important; }}
-div[data-baseweb="popover"] li:hover {{ background:#6C5CE733 !important; }}
+.stApp [data-testid="stSelectbox"] [data-baseweb="select"] * {{
+    color: {p['text']} !important;
+    -webkit-text-fill-color: {p['text']} !important;
+}}
+
+.stApp [data-testid="stSelectbox"] svg {{
+    fill: {p['text']} !important;
+    color: {p['text']} !important;
+    stroke: {p['text']} !important;
+}}
+
+/* DROPDOWN MENU / POPOVER FLOATING CONTAINER */
+div[data-baseweb="popover"],
+div[data-baseweb="popover"] > div,
+div[data-baseweb="popover"] [data-baseweb="menu"],
+div[data-baseweb="popover"] [role="listbox"],
+div[data-baseweb="popover"] ul {{
+    background-color: {p['panel']} !important;
+    background: {p['panel']} !important;
+    border: 1px solid {p['border']} !important;
+    border-radius: 10px !important;
+}}
+
+div[data-baseweb="popover"] li,
+div[data-baseweb="popover"] li *,
+div[data-baseweb="popover"] [role="option"],
+div[data-baseweb="popover"] [role="option"] * {{
+    background-color: transparent !important;
+    background: transparent !important;
+    color: {p['text']} !important;
+    -webkit-text-fill-color: {p['text']} !important;
+}}
+
+div[data-baseweb="popover"] li:hover,
+div[data-baseweb="popover"] [role="option"]:hover {{
+    background-color: #6C5CE733 !important;
+    background: #6C5CE733 !important;
+}}
+
 [data-testid="stToggle"] label, [data-testid="stToggle"] p {{ color:{p['text']} !important; }}
 [data-testid="stChatMessage"] {{ background:{p['panel']} !important; border:1px solid {p['border']}; border-radius:16px; padding:.9rem 1rem; }}
 [data-testid="stChatInput"], [data-testid="stChatInput"] > div {{ background:{p['panel']} !important; border:1px solid {p['border']}; border-radius:14px; }}
