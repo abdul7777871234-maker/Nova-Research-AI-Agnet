@@ -61,7 +61,7 @@ def inject_css(mode: str):
     .stButton > button[kind="primary"] {{ background:linear-gradient(90deg,#6C5CE7,#8E7DFF); color:#fff; border:none; }}
     .stButton > button[kind="primary"] p {{ color:#fff !important; }}
     [data-testid="stAlert"] {{ background:{p['panel']} !important; border:1px solid {p['border']}; }}
-    .tag {{ display:inline-block; padding:2px 10px; border-radius:99px; font-size:.75rem; background:#6C5CE722; color:#6C5CE7 !important;}}
+    .tag {{ display:inline-block; padding:2px 10px; border-radius:99px; font-size:.75rem; background:#6C5CE722; color:#6C5CE7 !important;
         /* dropdown override */
     .stApp [data-testid="stSelectbox"] [data-baseweb="select"] > div,
     .stApp [data-testid="stSelectbox"] [data-baseweb="select"] > div > div,
