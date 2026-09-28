@@ -56,14 +56,15 @@ with st.sidebar:
             st.rerun()
 
 # ---------- header ----------
-h1, h2 = st.columns([6, 1])
-h1.markdown(f'<div class="brand">{ui.logo(52)}<div><h2 style="margin:0">Nova Research Agent</h2>'
-            f'<span class="muted">Ask anything. I search, verify and cite.</span></div></div>', unsafe_allow_html=True)
+h1, h2 = st.columns([6, 1], vertical_alignment="center")
+h1.markdown(
+    f'<div class="brand">{ui.logo(52)}<div><h2 style="margin:0; padding:0; line-height:1.2;">Nova Research Agent</h2>'
+    f'<span class="muted">Ask anything. I search, verify and cite.</span></div></div>',
+    unsafe_allow_html=True
+)
 if h2.button("🧹 Clear chat", use_container_width=True):
-    # clears the main screen; the old conversation stays in sidebar history
     new_chat()
     st.rerun()
-
 # ---------- messages ----------
 for m in chat["messages"]:
     with st.chat_message(m["role"]):
