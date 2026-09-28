@@ -31,7 +31,7 @@ with st.sidebar:
     st.markdown('<p class="muted">Web research agent · CrewAI</p>', unsafe_allow_html=True)
 
     c1, c2 = st.columns([1, 3])
-    c1.markdown(f'<div style="padding-top:6px">{ui.MOON if S.dark else ui.SUN}</div>', unsafe_allow_html=True)
+    c1.markdown(f'<div class="icon">{ui.MOON if S.dark else ui.SUN}</div>', unsafe_allow_html=True)
     S.dark = c2.toggle("Dark theme", value=S.dark)
 
     st.divider()
